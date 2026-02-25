@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Mission8_3_15.Models.Task>
+
+@{
+    ViewData["Title"] = "Task List";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Incomplete Tasks</h2>
+
+<p>
+    <a asp-action="Task" class="btn btn-primary">Add New Task</a>
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Task</th>
+        <th>Due Date</th>
+        <th>Quadrant</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@item.TaskName</td>
+            <td>@item.DueDate</td>
+            <td>@item.Quadrant</td>
+            <td>@item.Category?.CategoryName</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-sm btn-danger">Delete</a>
+                
+                <form asp-action="MarkCompleted" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@item.TaskId" />
+                    <button type="submit" class="btn btn-sm btn-success">Complete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
