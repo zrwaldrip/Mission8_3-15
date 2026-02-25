@@ -1,42 +1,191 @@
 ﻿@model IEnumerable<Mission8_3_15.Models.TaskItem>
 
 @{
-    ViewData["Title"] = "Task List";
+    ViewData["Title"] = "Task Matrix";
 }
 
-<h2>Incomplete Tasks</h2>
-
-<p>
-    <a asp-action="Task" class="btn btn-primary">Add New Task</a>
-</p>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>Task</th>
-        <th>Due Date</th>
-        <th>Quadrant</th>
-        <th>Category</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>@item.TaskName</td>
-            <td>@item.DueDate</td>
-            <td>@item.Quadrant</td>
-            <td>@item.Category?.CategoryName</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-sm btn-danger">Delete</a>
-                
-                <form asp-action="MarkCompleted" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="@item.TaskId" />
-                    <button type="submit" class="btn btn-sm btn-success">Complete</button>
-                </form>
-            </td>
-        </tr>
+<style>
+    /* Styling to match the photo's aesthetic */
+    .matrix-wrapper {
+        background-color: #f1e3a6; /* Manila folder / Yellowish color */
+        border: 3px solid #000;
+        border-radius: 15px;
+        padding: 10px;
+        color: #000;
+        font-family: "Trebuchet MS", sans-serif;
+        margin-top: 20px;
     }
-    </tbody>
-</table>
+
+    .matrix-header-main {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 5px;
+    }
+
+    /* Grid Setup: 3 columns, 3 rows */
+    .matrix-grid {
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr;
+        grid-template-rows: 50px 1fr 1fr;
+    }
+
+    .matrix-cell {
+        border: 1px solid #000;
+        padding: 10px;
+        min-height: 250px;
+    }
+
+    /* Column/Row Headers */
+    .col-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        border: 1px solid #000;
+    }
+
+    .row-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 1.1rem;
+        border: 1px solid #000;
+        background-color: rgba(0,0,0,0.03);
+    }
+
+    .quadrant-title {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-decoration: underline;
+    }
+
+    /* Task Card Styling */
+    .task-card {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid #999;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .task-btns {
+        margin-top: 5px;
+        display: flex;
+        gap: 3px;
+    }
+
+    .btn-xs {
+        padding: 1px 5px;
+        font-size: 0.75rem;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Task Management</h2>
+        <a asp-action="Task" class="btn btn-dark">Add New Task</a>
+    </div>
+
+    <div class="matrix-wrapper shadow">
+        <div class="matrix-header-main">Stephen Covey's Time Management Matrix</div>
+
+        <div class="matrix-grid">
+            <div style="border: 1px solid #000;"></div>
+
+            <div class="col-header">Urgent</div>
+            <div class="col-header">Not Urgent</div>
+
+            <div class="row-header">Important</div>
+
+            <div class="matrix-cell">
+                <div class="quadrant-title">Quadrant 1</div>
+                @foreach (var item in Model.Where(x => x.Quadrant == 1))
+                {
+                    <div class="task-card">
+                        <strong>@item.TaskName</strong><br />
+                        <small>@item.DueDate?.ToShortDateString() | @item.Category?.CategoryName</small>
+                        <div class="task-btns">
+                            <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-xs btn-warning">Edit</a>
+                            <form asp-action="MarkCompleted" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.TaskId" />
+                                <button type="submit" class="btn btn-xs btn-success">Done</button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-xs btn-danger">Del</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="matrix-cell">
+                <div class="quadrant-title">Quadrant 2</div>
+                @foreach (var item in Model.Where(x => x.Quadrant == 2))
+                {
+                    <div class="task-card">
+                        <strong>@item.TaskName</strong><br />
+                        <small>@item.DueDate?.ToShortDateString() | @item.Category?.CategoryName</small>
+                        <div class="task-btns">
+                            <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-xs btn-warning">Edit</a>
+                            <form asp-action="MarkCompleted" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.TaskId" />
+                                <button type="submit" class="btn btn-xs btn-success">Done</button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-xs btn-danger">Del</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row-header">Not Important</div>
+
+            <div class="matrix-cell">
+                <div class="quadrant-title">Quadrant 3</div>
+                @foreach (var item in Model.Where(x => x.Quadrant == 3))
+                {
+                    <div class="task-card">
+                        <strong>@item.TaskName</strong><br />
+                        <small>@item.DueDate?.ToShortDateString() | @item.Category?.CategoryName</small>
+                        <div class="task-btns">
+                            <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-xs btn-warning">Edit</a>
+                            <form asp-action="MarkCompleted" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.TaskId" />
+                                <button type="submit" class="btn btn-xs btn-success">Done</button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-xs btn-danger">Del</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="matrix-cell">
+                <div class="quadrant-title">Quadrant 4</div>
+                @foreach (var item in Model.Where(x => x.Quadrant == 4))
+                {
+                    <div class="task-card">
+                        <strong>@item.TaskName</strong><br />
+                        <small>@item.DueDate?.ToShortDateString() | @item.Category?.CategoryName</small>
+                        <div class="task-btns">
+                            <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-xs btn-warning">Edit</a>
+                            <form asp-action="MarkCompleted" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.TaskId" />
+                                <button type="submit" class="btn btn-xs btn-success">Done</button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-xs btn-danger">Del</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
