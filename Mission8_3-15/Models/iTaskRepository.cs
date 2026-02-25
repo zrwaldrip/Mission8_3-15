@@ -1,13 +1,13 @@
-namespace Mission8_3_15.Models
+namespace Mission8_3_15.Models;
+
+public interface ITaskRepository
 {
-    public interface iTasksRepository
-    {
-        IQueryable<Task> Tasks { get; }
-        // Note: HomeController references Categories, so you need it here
-        IQueryable<Category> Categories { get; } 
+    IQueryable<TaskItem> Tasks { get; }
+    IQueryable<Category> Categories { get; }
+    
+    void UpdateTask(TaskItem newTask);
         
-        void SaveTask(Task task);
-        void UpdateTask(Task task);
-        void DeleteTask(Task task);
-    }
+    // Add these to match what you just wrote in EFTaskRepository
+    void SaveTask(TaskItem editTask);
+    void DeleteTask(TaskItem task);
 }
