@@ -9,8 +9,8 @@ namespace Mission8_3_15.Controllers;
 public class HomeController : Controller
 {
     // Set up repository pattern
-    private iTasksRepository _repo;
-    public HomeController(iTasksRepository temp)
+    private ITaskRepository _repo;
+    public HomeController(ITaskRepository temp)
     {
         _repo = temp;
     }
@@ -39,7 +39,7 @@ public class HomeController : Controller
 
     // Post route for submitting a task to the database
     [HttpPost]
-    public IActionResult Task(Task t)
+    public IActionResult Task(TaskItem t)
     {
         // Validate task before submission
         if (ModelState.IsValid)
