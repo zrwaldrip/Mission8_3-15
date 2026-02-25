@@ -2,15 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mission8_3_15.Models;
 using System.Diagnostics;
-using Task = System.Threading.Tasks.Task;
+
+// This alias is the magic fix for the "Task" naming collision!
+using Task = Mission8_3_15.Models.Task;
 
 namespace Mission8_3_15.Controllers;
 
 public class HomeController : Controller
 {
     // Set up repository pattern
-    private ITaskRepository _repo;
-    public HomeController(ITaskRepository temp)
+    private iTasksRepository _repo;
+    
+    public HomeController(iTasksRepository temp)
     {
         _repo = temp;
     }
@@ -20,7 +23,9 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         // Get all tasks that are not completed
+        // We use .Include() here so the Category data is pulled from the DB alongside the Task
         var tasks = _repo.Tasks
+                .Include(x => x.Category) 
                 .Where(x => x.Completed == false)
                 .ToList();
 
@@ -34,12 +39,12 @@ public class HomeController : Controller
     {
         ViewBag.Categories = _repo.Categories.ToList();
 
-        return View("Task", new TaskItem());
+        return View("Task", new Task());
     }
 
     // Post route for submitting a task to the database
     [HttpPost]
-    public IActionResult Task(TaskItem t)
+    public IActionResult Task(Task t)
     {
         // Validate task before submission
         if (ModelState.IsValid)
@@ -66,7 +71,7 @@ public class HomeController : Controller
 
     // Post route for submitting an edited task to the database
     [HttpPost]
-    public IActionResult Edit(TaskItem updatedTask)
+    public IActionResult Edit(Task updatedTask)
     {
         if (ModelState.IsValid)
         {
@@ -88,7 +93,7 @@ public class HomeController : Controller
 
     // Post route for deleting a task from the database
     [HttpPost]
-    public IActionResult Delete(TaskItem task)
+    public IActionResult Delete(Task task)
     {
         _repo.DeleteTask(task);
         return RedirectToAction("Index");
@@ -104,5 +109,4 @@ public class HomeController : Controller
 
         return RedirectToAction("Index");
     }
-
 }
