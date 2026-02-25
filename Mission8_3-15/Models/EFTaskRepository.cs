@@ -9,8 +9,8 @@ public class EFTaskRepository : ITaskRepository
         _context = temp;
     }
 
-    public List<TaskItem> Tasks => _context.Tasks.ToList();
-    public List<Category> Categories => _context.Categories.ToList();
+    public IQueryable<TaskItem> Tasks => _context.Tasks;
+    public IQueryable<Category> Categories => _context.Categories;
 
     public void SaveTask(TaskItem newTask)
     {

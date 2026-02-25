@@ -4,16 +4,16 @@ using Mission8_3_15.Models;
 using System.Diagnostics;
 
 // This alias is the magic fix for the "Task" naming collision!
-using Task = Mission8_3_15.Models.Task;
+using Task = Mission8_3_15.Models.TaskItem;
 
 namespace Mission8_3_15.Controllers;
 
 public class HomeController : Controller
 {
     // Set up repository pattern
-    private iTasksRepository _repo;
+    private ITaskRepository _repo;
     
-    public HomeController(iTasksRepository temp)
+    public HomeController(ITaskRepository temp)
     {
         _repo = temp;
     }

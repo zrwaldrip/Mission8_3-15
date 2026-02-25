@@ -2,8 +2,8 @@ namespace Mission8_3_15.Models;
 
 public interface ITaskRepository
 {
-    List<TaskItem> Tasks { get; }
-    List<Category> Categories { get; }
+    IQueryable<TaskItem> Tasks { get; }
+    IQueryable<Category> Categories { get; }
     
     void UpdateTask(TaskItem newTask);
         
