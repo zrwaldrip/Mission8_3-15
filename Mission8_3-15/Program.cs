@@ -15,7 +15,7 @@ builder.Services.AddDbContext<TaskContext>(options =>
 
 // 2. Register the Repository Pattern
 // This fixes your exact InvalidOperationException!
-builder.Services.AddScoped<iTasksRepository, EFTasksRepository>();
+builder.Services.AddScoped<ITaskRepository, EFTaskRepository>();
 
 var app = builder.Build();
 

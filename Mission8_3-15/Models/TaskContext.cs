@@ -8,7 +8,7 @@ public class TaskContext : DbContext
     {
     }
     
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TaskItem> Tasks { get; set; }
     
     // ADD THIS LINE to fix the red errors
     public DbSet<Category> Categories { get; set; }
