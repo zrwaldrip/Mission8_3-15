@@ -3,12 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Mission8_3_15.Models;
 using System.Diagnostics;
 
+// This alias is the magic fix for the "Task" naming collision!
+using Task = Mission8_3_15.Models.Task;
+
 namespace Mission8_3_15.Controllers;
 
 public class HomeController : Controller
 {
     // Set up repository pattern
     private iTasksRepository _repo;
+    
     public HomeController(iTasksRepository temp)
     {
         _repo = temp;
@@ -19,7 +23,9 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         // Get all tasks that are not completed
+        // We use .Include() here so the Category data is pulled from the DB alongside the Task
         var tasks = _repo.Tasks
+                .Include(x => x.Category) 
                 .Where(x => x.Completed == false)
                 .ToList();
 
@@ -103,5 +109,4 @@ public class HomeController : Controller
 
         return RedirectToAction("Index");
     }
-
 }
