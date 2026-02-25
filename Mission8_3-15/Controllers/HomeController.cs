@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mission8_3_15.Models;
 using System.Diagnostics;
+using Task = System.Threading.Tasks.Task;
 
 namespace Mission8_3_15.Controllers;
 
@@ -33,7 +34,7 @@ public class HomeController : Controller
     {
         ViewBag.Categories = _repo.Categories.ToList();
 
-        return View("Task", new Task());
+        return View("Task", new TaskItem());
     }
 
     // Post route for submitting a task to the database
@@ -65,7 +66,7 @@ public class HomeController : Controller
 
     // Post route for submitting an edited task to the database
     [HttpPost]
-    public IActionResult Edit(Task updatedTask)
+    public IActionResult Edit(TaskItem updatedTask)
     {
         if (ModelState.IsValid)
         {
@@ -87,7 +88,7 @@ public class HomeController : Controller
 
     // Post route for deleting a task from the database
     [HttpPost]
-    public IActionResult Delete(Task task)
+    public IActionResult Delete(TaskItem task)
     {
         _repo.DeleteTask(task);
         return RedirectToAction("Index");

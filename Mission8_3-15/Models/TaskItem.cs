@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mission8_3_15.Models;
 
-public class Task
+public class TaskItem
 {
     [Key]
     [Required]
@@ -10,7 +10,7 @@ public class Task
     [Required]
     public string TaskName { get; set; }
     
-    public string? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
     
     [Required]
     public int Quadrant { get; set; }
